@@ -1,17 +1,24 @@
-from flask import Flask, redirect, url_for, request, send_file
+from flask import Flask, redirect, url_for, request, send_file, jsonify, session
 from flask_cors import CORS, cross_origin
 import compute_service
 import time
+import json
 
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
 CORS(app)
+app.secret_key = 'verySecretKey'
 
 
 @app.route('/', methods=['GET'])
 def home():
-    return "Service connected"
+    rawJSON = ''
+    with open('services.json', 'r') as file:
+        rawJSON = json.load(file)
+        file.close()
+    #svc = jsonify(rawJSON)
+    return rawJSON
 
 @app.route('/get-processed-image', methods=['GET'])
 def get_image():
